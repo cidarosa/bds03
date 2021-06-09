@@ -29,10 +29,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private static final String[] PUBLIC = {"/oauth/token", "/h2-console/**"}; //todos podem acessar
 	
 	//Rotas para operador ou admin
-	private static final String[] OPERATOR_OR_ADMIN = {"/products/**", "/categories/**"};
+	private static final String[] OPERATOR_GET = {"/departments/**", "/employees/**"};
 	
 	//Rotas somente para admin
-	private static final String[] ADMIN = {"/users/**"};
+	//private static final String[] ADMIN = {"/users/**"};
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -50,9 +50,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		//configurando quem pode acessar o que
 		http.authorizeRequests()
 		.antMatchers(PUBLIC).permitAll()
-		.antMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
-		.antMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN") //tá no DB
-		.antMatchers(ADMIN).hasRole("ADMIN")
-		.anyRequest().authenticated(); //qq outra exige autenticação
+		.antMatchers(HttpMethod.GET, OPERATOR_GET).hasAnyRole("OPERATOR", "ADMIN")//tá no DB
+		.anyRequest().hasAnyRole("ADMIN"); //qq outra exige autenticação
 	}
 }
